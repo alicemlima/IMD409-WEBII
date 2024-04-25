@@ -9,8 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 import com.jeanlima.springrestapiapp.model.Cliente;
 
-//classe e tipo do id
-//start jpa já escaneia interfaces que herdam o JpaRepository - não precisa da anotaçao
 public interface ClienteRepository extends JpaRepository<Cliente,Integer>{
 
     /*

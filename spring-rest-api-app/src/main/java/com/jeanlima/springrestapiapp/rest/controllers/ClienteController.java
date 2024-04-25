@@ -1,6 +1,9 @@
 package com.jeanlima.springrestapiapp.rest.controllers;
 
-import java.util.List;
+import com.jeanlima.springrestapiapp.model.Cliente;
+import com.jeanlima.springrestapiapp.repository.ClienteRepository;
+import com.jeanlima.springrestapiapp.rest.converters.PedidosConverter;
+import com.jeanlima.springrestapiapp.rest.dto.ClienteComPedidosDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -8,8 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.jeanlima.springrestapiapp.model.Cliente;
-import com.jeanlima.springrestapiapp.repository.ClienteRepository;
+import java.util.List;
 
 
 
@@ -27,6 +29,12 @@ public class ClienteController {
                 .orElseThrow(() -> //se nao achar lança o erro!
                         new ResponseStatusException(HttpStatus.NOT_FOUND,
                                 "Cliente não encontrado"));
+    }
+    @GetMapping("{id}/carrinho")
+    public ClienteComPedidosDTO getTudo (@PathVariable Integer id ){
+        System.out.println(clientes.findClienteFetchPedidos(id));
+        PedidosConverter converter = new PedidosConverter();
+        return converter.toClienteComPedidosDTO(clientes.findClienteFetchPedidos(id));
     }
 
     @PostMapping
