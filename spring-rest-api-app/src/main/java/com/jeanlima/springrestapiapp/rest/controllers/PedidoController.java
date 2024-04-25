@@ -1,10 +1,10 @@
 
 package com.jeanlima.springrestapiapp.rest.controllers;
 
+import com.jeanlima.springrestapiapp.converters.PedidosConverter;
 import com.jeanlima.springrestapiapp.enums.StatusPedido;
 import com.jeanlima.springrestapiapp.model.Pedido;
 import com.jeanlima.springrestapiapp.repository.PedidoRepository;
-import com.jeanlima.springrestapiapp.rest.converters.PedidosConverter;
 import com.jeanlima.springrestapiapp.rest.dto.AtualizacaoStatusPedidoDTO;
 import com.jeanlima.springrestapiapp.rest.dto.InformacoesPedidoDTO;
 import com.jeanlima.springrestapiapp.rest.dto.PedidoDTO;
@@ -26,17 +26,17 @@ public class PedidoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Integer save( @RequestBody PedidoDTO dto ){
+    public Integer save(@RequestBody PedidoDTO dto) {
         Pedido pedido = service.salvar(dto);
         return pedido.getId();
     }
 
-     @GetMapping("{id}")
-    public InformacoesPedidoDTO getById( @PathVariable Integer id ){
+    @GetMapping("{id}")
+    public InformacoesPedidoDTO getById(@PathVariable Integer id) {
         PedidosConverter converter = new PedidosConverter();
         return service
                 .obterPedidoCompleto(id)
-                .map( p -> converter.toInformacoesPedidoDTO(p) )
+                .map(p -> converter.toInformacoesPedidoDTO(p))
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado."));
     }
@@ -44,22 +44,22 @@ public class PedidoController {
 
     @PatchMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateStatus(@PathVariable Integer id ,
-                             @RequestBody AtualizacaoStatusPedidoDTO dto){
+    public void updateStatus(@PathVariable Integer id,
+                             @RequestBody AtualizacaoStatusPedidoDTO dto) {
         String novoStatus = dto.getNovoStatus();
         service.atualizaStatus(id, StatusPedido.valueOf(novoStatus));
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete( @PathVariable Integer id ){
+    public void delete(@PathVariable Integer id) {
         repository.findById(id)
-                .map( pedido -> {
+                .map(pedido -> {
                     repository.delete(pedido);
                     return pedido;
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Cliente não encontrado") );
+                        "Cliente não encontrado"));
 
     }
 

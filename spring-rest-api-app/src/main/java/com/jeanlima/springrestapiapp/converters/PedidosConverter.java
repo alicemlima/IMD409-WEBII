@@ -1,4 +1,4 @@
-package com.jeanlima.springrestapiapp.rest.converters;
+package com.jeanlima.springrestapiapp.converters;
 
 import com.jeanlima.springrestapiapp.model.Cliente;
 import com.jeanlima.springrestapiapp.model.ItemPedido;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class PedidosConverter {
-    public InformacoesPedidoDTO toInformacoesPedidoDTO(Pedido pedido){
+    public InformacoesPedidoDTO toInformacoesPedidoDTO(Pedido pedido) {
         return InformacoesPedidoDTO
                 .builder()
                 .codigo(pedido.getId())
@@ -29,8 +29,8 @@ public class PedidosConverter {
                 .build();
     }
 
-    private List<InformacaoItemPedidoDTO> convertToInformacaoItemPedidoDTO(List<ItemPedido> itens){
-        if(CollectionUtils.isEmpty(itens)){
+    private List<InformacaoItemPedidoDTO> convertToInformacaoItemPedidoDTO(List<ItemPedido> itens) {
+        if (CollectionUtils.isEmpty(itens)) {
             return Collections.emptyList();
         }
         return itens.stream().map(
@@ -43,7 +43,7 @@ public class PedidosConverter {
         ).collect(Collectors.toList());
     }
 
-    public ClienteComPedidosDTO toClienteComPedidosDTO(Cliente cliente){
+    public ClienteComPedidosDTO toClienteComPedidosDTO(Cliente cliente) {
         return ClienteComPedidosDTO
                 .builder()
                 .clienteId(cliente.getId())
@@ -52,4 +52,5 @@ public class PedidosConverter {
                 .pedidos(cliente.getPedidos().stream().map(this::toInformacoesPedidoDTO).toList())
                 .build();
     }
+
 }

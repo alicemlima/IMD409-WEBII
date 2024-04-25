@@ -1,50 +1,49 @@
 package com.jeanlima.springrestapiapp.model;
 
-import java.math.BigDecimal;
-
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.math.BigDecimal;
 
 
 @Entity
 @Table(name = "produto")
 @Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
 public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id") //nao obrigatório - vai ser igual o nome do atributo
+    @Getter
+    @Setter
     private Integer id;
 
     @Column
+    @Getter
+    @Setter
     private String descricao;
-    
-    @Column(precision = 10,scale = 2)
+
+    @Column(precision = 10, scale = 2)
+    @Getter
+    @Setter
     private BigDecimal preco;
 
-    public Integer getId() {
-        return id;
-    }
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    public String getDescricao() {
-        return descricao;
-    }
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-    public BigDecimal getPreco() {
-        return preco;
-    }
-    public void setPreco(BigDecimal preco) {
-        this.preco = preco;
-    }
-    public Produto() {
-    }
-    public Produto(String descricao, BigDecimal preco) {
+    @Column
+    @Getter
+    @Setter
+    private Integer quantidade;
+
+    public Produto(String descricao, BigDecimal preco, Integer quantidade) {
         this.descricao = descricao;
         this.preco = preco;
+        this.quantidade = quantidade;
     }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -54,6 +53,7 @@ public class Produto {
         result = prime * result + ((preco == null) ? 0 : preco.hashCode());
         return result;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -80,13 +80,11 @@ public class Produto {
             return false;
         return true;
     }
+
     @Override
     public String toString() {
         return "Produto [id=" + id + ", descricao=" + descricao + ", preco=" + preco + "]";
     }
 
-    
 
-    
-    
 }
