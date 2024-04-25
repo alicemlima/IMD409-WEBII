@@ -3,6 +3,7 @@ package com.jeanlima.springrestapiapp.rest.controllers;
 
 import com.jeanlima.springrestapiapp.enums.StatusPedido;
 import com.jeanlima.springrestapiapp.model.Pedido;
+import com.jeanlima.springrestapiapp.repository.PedidoRepository;
 import com.jeanlima.springrestapiapp.rest.converters.PedidosConverter;
 import com.jeanlima.springrestapiapp.rest.dto.AtualizacaoStatusPedidoDTO;
 import com.jeanlima.springrestapiapp.rest.dto.InformacoesPedidoDTO;
@@ -19,6 +20,9 @@ public class PedidoController {
 
     @Autowired
     private PedidoService service;
+
+    @Autowired
+    private PedidoRepository repository;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -38,7 +42,7 @@ public class PedidoController {
     }
 
 
-     @PatchMapping("{id}")
+    @PatchMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateStatus(@PathVariable Integer id ,
                              @RequestBody AtualizacaoStatusPedidoDTO dto){
@@ -46,5 +50,17 @@ public class PedidoController {
         service.atualizaStatus(id, StatusPedido.valueOf(novoStatus));
     }
 
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete( @PathVariable Integer id ){
+        repository.findById(id)
+                .map( pedido -> {
+                    repository.delete(pedido);
+                    return pedido;
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Cliente não encontrado") );
+
+    }
 
 }
