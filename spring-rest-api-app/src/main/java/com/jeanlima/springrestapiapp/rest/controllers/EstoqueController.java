@@ -3,9 +3,11 @@ package com.jeanlima.springrestapiapp.rest.controllers;
 import com.jeanlima.springrestapiapp.converters.EstoqueConverter;
 import com.jeanlima.springrestapiapp.model.Estoque;
 import com.jeanlima.springrestapiapp.model.Produto;
+import com.jeanlima.springrestapiapp.model.ProdutoComQuantidade;
 import com.jeanlima.springrestapiapp.repository.EstoqueRepository;
 import com.jeanlima.springrestapiapp.repository.ProdutoRepository;
 import com.jeanlima.springrestapiapp.rest.dto.EstoqueDTO;
+import com.jeanlima.springrestapiapp.service.EstoqueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +23,15 @@ public class EstoqueController {
     private EstoqueRepository repository;
 
     @Autowired
+    private EstoqueService service;
+
+    @Autowired
     private ProdutoRepository produtoRepository;
 
     @PostMapping
     @ResponseStatus(CREATED)
     public Estoque save(@RequestBody Estoque estoque) {
-        return repository.save(estoque);
+        return service.salvar(estoque);
     }
 
     @GetMapping("{id}")
@@ -66,28 +71,35 @@ public class EstoqueController {
 
     @PutMapping("{id}")
     @ResponseStatus(NO_CONTENT)
-    public EstoqueDTO addProduto(@PathVariable Integer id, @RequestBody Produto produto) {
+    public EstoqueDTO addProduto(@PathVariable Integer id, @RequestBody ProdutoComQuantidade produtoComQuantidade) {
         EstoqueConverter converter = new EstoqueConverter();
         Estoque estoque = repository.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Estoque não encontrado."));
 
-        Produto produtoExistente = produtoRepository.getProdutosByDescricao(produto.getDescricao());
+        Produto produtoExistente = produtoRepository
+                .getProdutosByDescricao(produtoComQuantidade.getProduto().getDescricao());
+
         if (produtoExistente != null) {
-            estoque.getProdutos().add(produto);
+            ProdutoComQuantidade novoProdutoQuantidade = new ProdutoComQuantidade(produtoExistente, produtoComQuantidade.getQuantidade());
+            estoque.getProdutosQuantidade().add(novoProdutoQuantidade);
             repository.save(estoque);
 
         } else {
-            Produto novo = new Produto(produto.getDescricao(), produto.getPreco(), produto.getQuantidade());
+            Produto novo = new Produto(
+                    produtoComQuantidade.getProduto().getDescricao(),
+                    produtoComQuantidade.getProduto().getPreco());
             produtoRepository.save(novo);
-            estoque.getProdutos().add(novo);
+            ProdutoComQuantidade novoProdutoQuantidade = new ProdutoComQuantidade(novo, produtoComQuantidade.getQuantidade());
+            estoque.getProdutosQuantidade().add(novoProdutoQuantidade);
             repository.save(estoque);
         }
 
         return converter.toEstoqueDTO(estoque);
     }
+
 //    @PatchMapping("{id}")
 //    @ResponseStatus(NO_CONTENT)
-//    public void updatePreco ( @PathVariable Integer id, @RequestParam BigDecimal preco ){
+//    public void updatePreco ( @PathVariable Integer id, @RequestParam Integer quantidade ){
 //        repository
 //                .findById(id)
 //                .map( p -> {

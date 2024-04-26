@@ -7,4 +7,6 @@ import com.jeanlima.springrestapiapp.model.Produto;
 
 public interface ProdutoRepository extends JpaRepository<Produto,Integer>{
     Produto getProdutosByDescricao (String descricao);
+
+    Produto getByDescricao(String descricao);
 }

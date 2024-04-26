@@ -15,5 +15,4 @@ public class ProdutoDTO {
     private Integer id;
     private String descricao;
     private BigDecimal preco;
-    private Integer quantidade;
 }

@@ -11,37 +11,29 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "produto")
-@Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
+@Embeddable
+@Getter
+@Setter
 public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id") //nao obrigatório - vai ser igual o nome do atributo
-    @Getter
-    @Setter
+    @Column(name = "id")
     private Integer id;
 
     @Column
-    @Getter
-    @Setter
     private String descricao;
 
     @Column(precision = 10, scale = 2)
-    @Getter
-    @Setter
     private BigDecimal preco;
 
-    @Column
-    @Getter
-    @Setter
-    private Integer quantidade;
 
-    public Produto(String descricao, BigDecimal preco, Integer quantidade) {
+    public Produto(String descricao, BigDecimal preco) {
         this.descricao = descricao;
         this.preco = preco;
-        this.quantidade = quantidade;
+
     }
 
     @Override

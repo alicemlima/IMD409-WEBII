@@ -22,6 +22,6 @@ public class Estoque {
     @Getter
     @Setter
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Produto> produtos;
+    private List<ProdutoComQuantidade> produtosQuantidade;
 
 }
